@@ -25,10 +25,10 @@ class Client:
 
 
 class ClientManager:
-    def __init__(self, file_path="clients.json"):
+    def __init__(self, file_path=None):
+        if file_path is None:
+            file_path = Path(__file__).resolve().parent.parent / "clients.json"
         self.file_path = Path(file_path)
-        self.clients: List[Client] = []
-        self.load_clients()
 
     def add_client(self, name: str, contact: str, business: str):
         client = Client(name, contact, business)
@@ -68,3 +68,11 @@ class ClientManager:
             self.clients = [Client.from_dict(item) for item in data]
         except (json.JSONDecodeError, TypeError, ValueError):
             self.clients = []
+
+    def json2txt(self):
+        with self.file_path.open("r", encoding="utf-8") as infile:
+            data = json.load(infile)
+
+        output_path = Path(r"docs/clients_data.txt")
+        with output_path.open("w", encoding="utf-8") as outfile:
+            outfile.write(json.dumps(data, indent=2))
