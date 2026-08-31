@@ -44,6 +44,21 @@ class Plan:
         self.progress = round((completed / len(self.all_tasks)) * 100)
         return self.progress
 
+    def sync_task_lists(self, all_tasks=None, pending_tasks=None):
+        if all_tasks is not None:
+            self.all_tasks = list(all_tasks)
+
+        if pending_tasks is not None:
+            self.pending_tasks = list(pending_tasks)
+        elif not self.pending_tasks:
+            self.pending_tasks = list(self.all_tasks)
+
+        self.pending_tasks = [task for task in self.pending_tasks if task in self.all_tasks]
+        self.pending_tasks = list(dict.fromkeys(self.pending_tasks))
+        self.all_tasks = list(dict.fromkeys(self.all_tasks))
+        self.refresh_progress()
+        self.update_clients_progress()
+
     def add_pending_task(self, task):
         if not task:
             return
@@ -76,6 +91,96 @@ class Plan:
             "pending_tasks": list(self.pending_tasks),
             "all_tasks": list(self.all_tasks),
         }
+
+
+class TaskDetailsWindow(tk.Toplevel):
+    def __init__(self, master=None, client_name="Client", plan=None, all_tasks=None, pending_tasks=None):
+        super().__init__(master)
+        self.title(f"Task Details - {client_name}")
+        self.geometry("560x430")
+        self.minsize(460, 320)
+
+        self.plan = plan
+        self.master_app = master
+
+        main = ttk.Frame(self, padding=14)
+        main.pack(fill="both", expand=True)
+
+        ttk.Label(main, text=f"Client: {client_name}", font=("Segoe UI", 10, "bold")).pack(anchor="w", pady=(0, 10))
+
+        task_columns = ttk.Frame(main)
+        task_columns.pack(fill="both", expand=True)
+        task_columns.columnconfigure(0, weight=1)
+        task_columns.columnconfigure(1, weight=1)
+
+        ttk.Label(task_columns, text="All Tasks", font=("Segoe UI", 9, "bold")).grid(row=0, column=0, sticky="w", padx=(0, 8), pady=(0, 6))
+        ttk.Label(task_columns, text="Pending Tasks", font=("Segoe UI", 9, "bold")).grid(row=0, column=1, sticky="w", pady=(0, 6))
+
+        all_scroll = ttk.Scrollbar(task_columns, orient="vertical")
+        pending_scroll = ttk.Scrollbar(task_columns, orient="vertical")
+
+        self.all_box = tk.Listbox(task_columns, height=14, exportselection=False, font=("Segoe UI", 9), yscrollcommand=all_scroll.set)
+        self.pending_box = tk.Listbox(task_columns, height=14, exportselection=False, bg="#fffef5", font=("Segoe UI", 9), yscrollcommand=pending_scroll.set)
+
+        self.all_box.grid(row=1, column=0, sticky="nsew", padx=(0, 6), pady=(0, 10))
+        all_scroll.grid(row=1, column=0, sticky="ns", padx=(0, 0), pady=(0, 10))
+        self.pending_box.grid(row=1, column=1, sticky="nsew", padx=(6, 0), pady=(0, 10))
+        pending_scroll.grid(row=1, column=1, sticky="ns", padx=(0, 0), pady=(0, 10))
+
+        all_scroll.config(command=self.all_box.yview)
+        pending_scroll.config(command=self.pending_box.yview)
+
+        self.populate_lists(all_tasks=all_tasks, pending_tasks=pending_tasks)
+
+        button_row = ttk.Frame(main)
+        button_row.pack(fill="x", pady=(0, 8))
+        ttk.Button(button_row, text="Mark Done", command=self.mark_selected_done).pack(side="left", padx=(0, 8))
+        ttk.Button(button_row, text="Close", command=self.close_window).pack(side="left")
+
+    def populate_lists(self, all_tasks=None, pending_tasks=None):
+        self.all_box.delete(0, tk.END)
+        self.pending_box.delete(0, tk.END)
+
+        tasks = list(all_tasks) if all_tasks is not None else []
+        pending = list(pending_tasks) if pending_tasks is not None else []
+
+        if tasks:
+            for task in tasks:
+                self.all_box.insert(tk.END, task)
+        else:
+            self.all_box.insert(tk.END, "No tasks yet")
+
+        if pending:
+            for task in pending:
+                self.pending_box.insert(tk.END, task)
+        else:
+            self.pending_box.insert(tk.END, "No pending tasks")
+
+    def close_window(self):
+        self.destroy()
+        if self.master_app is not None:
+            try:
+                self.master_app.deiconify()
+            except Exception:
+                pass
+
+    def mark_selected_done(self):
+        if self.plan is None:
+            messagebox.showwarning("No task plan", "There is no active task plan to update.")
+            return
+
+        selected = self.pending_box.curselection()
+        if not selected:
+            messagebox.showwarning("No task selected", "Select a task from the pending list first.")
+            return
+
+        task = self.pending_box.get(selected[0])
+        self.plan.complete_task(task)
+
+        if self.master_app and hasattr(self.master_app, "refresh_display"):
+            self.master_app.refresh_display()
+
+        self.populate_lists(all_tasks=self.plan.all_tasks, pending_tasks=self.plan.pending_tasks)
 
 
 class AllClientsProgressWindow(tk.Toplevel):
@@ -170,6 +275,25 @@ class AllClientsProgressWindow(tk.Toplevel):
 
 
 class ProgressApp(tk.Tk):
+    @staticmethod
+    def resolve_client_file():
+        candidates = [
+            Path(__file__).resolve().parent.parent / "clients.json",
+            Path(__file__).resolve().parent / "clients.json",
+            Path.cwd() / "clients.json",
+            Path(sys.executable).resolve().parent / "clients.json",
+        ]
+
+        if getattr(sys, "_MEIPASS", None):
+            candidates.insert(0, Path(sys._MEIPASS) / "clients.json")
+
+        for candidate in candidates:
+            if candidate.exists():
+                return candidate
+
+        fallback = Path(sys.executable).resolve().parent / "clients.json"
+        return fallback
+
     def __init__(self):
         super().__init__()
         self.title("Client Progress Tracker")
@@ -179,7 +303,7 @@ class ProgressApp(tk.Tk):
         self.style = ttk.Style(self)
         self.style.theme_use("clam")
 
-        self.client_file = Path(__file__).resolve().parent.parent / "clients.json"
+        self.client_file = self.resolve_client_file()
         self.client_manager = ClientManager(self.client_file)
 
         self.client_name_var = tk.StringVar(value="")
@@ -307,7 +431,7 @@ class ProgressApp(tk.Tk):
         button_row.grid(row=3, column=0, columnspan=4, sticky="ew", padx=(10, 10), pady=(0, 12))
 
         ttk.Button(button_row, text="Add Task", command=self.add_task, style="Action.TButton").pack(side="left", padx=(0, 8))
-        ttk.Button(button_row, text="Mark Done", command=self.complete_selected_task, style="Action.TButton").pack(side="left", padx=(0, 8))
+        ttk.Button(button_row, text="Tasks Details", command=self.open_task_details_window, style="Action.TButton").pack(side="left", padx=(0, 8))
         ttk.Button(button_row, text="Refresh Progress", command=self.refresh_display, style="Action.TButton").pack(side="left", padx=(0, 8))
         ttk.Button(button_row, text="Open All Clients", command=self.open_all_clients, style="Action.TButton").pack(side="left", padx=(0, 8))
         ttk.Button(button_row, text="Send Email", command=self.send_email_to_client, style="Action.TButton").pack(side="left", padx=(0, 8))
@@ -416,11 +540,22 @@ class ProgressApp(tk.Tk):
             client = existing
 
         self.plan = Plan(client, all_tasks=list(tasks))
-        self.plan.pending_tasks = list(self.plan.all_tasks)
-        self.plan.refresh_progress()
-        self.plan.update_clients_progress()
+        self.plan.sync_task_lists(all_tasks=list(tasks), pending_tasks=list(tasks))
         self.total_tasks_var.set(str(len(self.plan.all_tasks)))
         self.refresh_display()
+
+    def open_task_details_window(self):
+        if self.plan is None:
+            messagebox.showwarning("No client plan", "Create a client plan first.")
+            return
+
+        TaskDetailsWindow(
+            self,
+            client_name=self.client_name_var.get().strip() or self.plan.client_name,
+            plan=self.plan,
+            all_tasks=list(self.plan.all_tasks),
+            pending_tasks=list(self.plan.pending_tasks),
+        )
 
     def add_task(self):
         if self.plan is None:
@@ -465,7 +600,7 @@ class ProgressApp(tk.Tk):
             self.pending_tasks_box.insert(tk.END, "No pending tasks")
             return
 
-        self.plan.refresh_progress()
+        self.plan.sync_task_lists(all_tasks=self.plan.all_tasks, pending_tasks=self.plan.pending_tasks)
         self.progress_var.set(f"{self.plan.progress}%")
         self.progress_bar["value"] = self.plan.progress
         self._apply_progress_bar_color(self.plan.progress)
@@ -513,9 +648,7 @@ class ProgressApp(tk.Tk):
         pending_tasks = list(saved.get("pending_tasks", all_tasks))
         self.client_name_var.set(client_name)
         self.plan = Plan(client, all_tasks=all_tasks)
-        self.plan.pending_tasks = pending_tasks
-        self.plan.refresh_progress()
-        self.plan.update_clients_progress()
+        self.plan.sync_task_lists(all_tasks=all_tasks, pending_tasks=pending_tasks)
         self.total_tasks_var.set(str(len(self.plan.all_tasks)))
         self.refresh_display()
 

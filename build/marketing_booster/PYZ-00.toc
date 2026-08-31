@@ -1,0 +1,578 @@
+('C:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+ 'booster\\build\\marketing_booster\\PYZ-00.pyz',
+ [('__future__',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\__future__.py',
+   'PYMODULE'),
+  ('_aix_support',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\_aix_support.py',
+   'PYMODULE'),
+  ('_ast_unparse',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\_ast_unparse.py',
+   'PYMODULE'),
+  ('_colorize',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\_colorize.py',
+   'PYMODULE'),
+  ('_compat_pickle',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\_compat_pickle.py',
+   'PYMODULE'),
+  ('_opcode_metadata',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\_opcode_metadata.py',
+   'PYMODULE'),
+  ('_py_abc',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\_py_abc.py',
+   'PYMODULE'),
+  ('_py_warnings',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\_py_warnings.py',
+   'PYMODULE'),
+  ('_pydatetime',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\_pydatetime.py',
+   'PYMODULE'),
+  ('_pydecimal',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\_pydecimal.py',
+   'PYMODULE'),
+  ('_strptime',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\_strptime.py',
+   'PYMODULE'),
+  ('_threading_local',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\_threading_local.py',
+   'PYMODULE'),
+  ('annotationlib',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\annotationlib.py',
+   'PYMODULE'),
+  ('argparse',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\argparse.py',
+   'PYMODULE'),
+  ('ast',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\ast.py',
+   'PYMODULE'),
+  ('base64',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\base64.py',
+   'PYMODULE'),
+  ('bisect',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\bisect.py',
+   'PYMODULE'),
+  ('bz2',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\bz2.py',
+   'PYMODULE'),
+  ('calendar',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\calendar.py',
+   'PYMODULE'),
+  ('clients_management',
+   'C:\\Users\\ssssh\\OneDrive\\Documents\\Marketing booster\\python '
+   'code\\clients_management.py',
+   'PYMODULE'),
+  ('clients_progress_ui',
+   'C:\\Users\\ssssh\\OneDrive\\Documents\\Marketing booster\\python '
+   'code\\clients_progress_ui.py',
+   'PYMODULE'),
+  ('codeop',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\codeop.py',
+   'PYMODULE'),
+  ('compression',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\compression\\__init__.py',
+   'PYMODULE'),
+  ('compression._common',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\compression\\_common\\__init__.py',
+   'PYMODULE'),
+  ('compression._common._streams',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\compression\\_common\\_streams.py',
+   'PYMODULE'),
+  ('compression.zstd',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\compression\\zstd\\__init__.py',
+   'PYMODULE'),
+  ('compression.zstd._zstdfile',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\compression\\zstd\\_zstdfile.py',
+   'PYMODULE'),
+  ('contextlib',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\contextlib.py',
+   'PYMODULE'),
+  ('contextvars',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\contextvars.py',
+   'PYMODULE'),
+  ('copy',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\copy.py',
+   'PYMODULE'),
+  ('csv',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\csv.py',
+   'PYMODULE'),
+  ('ctypes',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\ctypes\\__init__.py',
+   'PYMODULE'),
+  ('ctypes._endian',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\ctypes\\_endian.py',
+   'PYMODULE'),
+  ('ctypes._layout',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\ctypes\\_layout.py',
+   'PYMODULE'),
+  ('dataclasses',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\dataclasses.py',
+   'PYMODULE'),
+  ('datetime',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\datetime.py',
+   'PYMODULE'),
+  ('decimal',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\decimal.py',
+   'PYMODULE'),
+  ('difflib',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\difflib.py',
+   'PYMODULE'),
+  ('dis',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\dis.py',
+   'PYMODULE'),
+  ('email',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\email\\__init__.py',
+   'PYMODULE'),
+  ('email._encoded_words',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\email\\_encoded_words.py',
+   'PYMODULE'),
+  ('email._header_value_parser',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\email\\_header_value_parser.py',
+   'PYMODULE'),
+  ('email._parseaddr',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\email\\_parseaddr.py',
+   'PYMODULE'),
+  ('email._policybase',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\email\\_policybase.py',
+   'PYMODULE'),
+  ('email.base64mime',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\email\\base64mime.py',
+   'PYMODULE'),
+  ('email.charset',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\email\\charset.py',
+   'PYMODULE'),
+  ('email.contentmanager',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\email\\contentmanager.py',
+   'PYMODULE'),
+  ('email.encoders',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\email\\encoders.py',
+   'PYMODULE'),
+  ('email.errors',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\email\\errors.py',
+   'PYMODULE'),
+  ('email.feedparser',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\email\\feedparser.py',
+   'PYMODULE'),
+  ('email.generator',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\email\\generator.py',
+   'PYMODULE'),
+  ('email.header',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\email\\header.py',
+   'PYMODULE'),
+  ('email.headerregistry',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\email\\headerregistry.py',
+   'PYMODULE'),
+  ('email.iterators',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\email\\iterators.py',
+   'PYMODULE'),
+  ('email.message',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\email\\message.py',
+   'PYMODULE'),
+  ('email.parser',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\email\\parser.py',
+   'PYMODULE'),
+  ('email.policy',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\email\\policy.py',
+   'PYMODULE'),
+  ('email.quoprimime',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\email\\quoprimime.py',
+   'PYMODULE'),
+  ('email.utils',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\email\\utils.py',
+   'PYMODULE'),
+  ('fnmatch',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\fnmatch.py',
+   'PYMODULE'),
+  ('fractions',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\fractions.py',
+   'PYMODULE'),
+  ('ftplib',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\ftplib.py',
+   'PYMODULE'),
+  ('getopt',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\getopt.py',
+   'PYMODULE'),
+  ('gettext',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\gettext.py',
+   'PYMODULE'),
+  ('glob',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\glob.py',
+   'PYMODULE'),
+  ('gzip',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\gzip.py',
+   'PYMODULE'),
+  ('hashlib',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\hashlib.py',
+   'PYMODULE'),
+  ('http',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\http\\__init__.py',
+   'PYMODULE'),
+  ('http.client',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\http\\client.py',
+   'PYMODULE'),
+  ('http.cookiejar',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\http\\cookiejar.py',
+   'PYMODULE'),
+  ('importlib',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\importlib\\__init__.py',
+   'PYMODULE'),
+  ('importlib._abc',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\importlib\\_abc.py',
+   'PYMODULE'),
+  ('importlib._bootstrap',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\importlib\\_bootstrap.py',
+   'PYMODULE'),
+  ('importlib._bootstrap_external',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\importlib\\_bootstrap_external.py',
+   'PYMODULE'),
+  ('importlib.abc',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\importlib\\abc.py',
+   'PYMODULE'),
+  ('importlib.machinery',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\importlib\\machinery.py',
+   'PYMODULE'),
+  ('importlib.metadata',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\importlib\\metadata\\__init__.py',
+   'PYMODULE'),
+  ('importlib.metadata._adapters',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\importlib\\metadata\\_adapters.py',
+   'PYMODULE'),
+  ('importlib.metadata._collections',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\importlib\\metadata\\_collections.py',
+   'PYMODULE'),
+  ('importlib.metadata._functools',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\importlib\\metadata\\_functools.py',
+   'PYMODULE'),
+  ('importlib.metadata._itertools',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\importlib\\metadata\\_itertools.py',
+   'PYMODULE'),
+  ('importlib.metadata._meta',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\importlib\\metadata\\_meta.py',
+   'PYMODULE'),
+  ('importlib.metadata._text',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\importlib\\metadata\\_text.py',
+   'PYMODULE'),
+  ('importlib.readers',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\importlib\\readers.py',
+   'PYMODULE'),
+  ('importlib.resources',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\importlib\\resources\\__init__.py',
+   'PYMODULE'),
+  ('importlib.resources._adapters',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\importlib\\resources\\_adapters.py',
+   'PYMODULE'),
+  ('importlib.resources._common',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\importlib\\resources\\_common.py',
+   'PYMODULE'),
+  ('importlib.resources._functional',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\importlib\\resources\\_functional.py',
+   'PYMODULE'),
+  ('importlib.resources._itertools',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\importlib\\resources\\_itertools.py',
+   'PYMODULE'),
+  ('importlib.resources.abc',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\importlib\\resources\\abc.py',
+   'PYMODULE'),
+  ('importlib.resources.readers',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\importlib\\resources\\readers.py',
+   'PYMODULE'),
+  ('importlib.util',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\importlib\\util.py',
+   'PYMODULE'),
+  ('inspect',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\inspect.py',
+   'PYMODULE'),
+  ('ipaddress',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\ipaddress.py',
+   'PYMODULE'),
+  ('json',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\json\\__init__.py',
+   'PYMODULE'),
+  ('json.decoder',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\json\\decoder.py',
+   'PYMODULE'),
+  ('json.encoder',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\json\\encoder.py',
+   'PYMODULE'),
+  ('json.scanner',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\json\\scanner.py',
+   'PYMODULE'),
+  ('logging',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\logging\\__init__.py',
+   'PYMODULE'),
+  ('lzma',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\lzma.py',
+   'PYMODULE'),
+  ('mimetypes',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\mimetypes.py',
+   'PYMODULE'),
+  ('netrc',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\netrc.py',
+   'PYMODULE'),
+  ('numbers',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\numbers.py',
+   'PYMODULE'),
+  ('opcode',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\opcode.py',
+   'PYMODULE'),
+  ('pathlib',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\pathlib\\__init__.py',
+   'PYMODULE'),
+  ('pathlib._os',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\pathlib\\_os.py',
+   'PYMODULE'),
+  ('pickle',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\pickle.py',
+   'PYMODULE'),
+  ('pprint',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\pprint.py',
+   'PYMODULE'),
+  ('py_compile',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\py_compile.py',
+   'PYMODULE'),
+  ('quopri',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\quopri.py',
+   'PYMODULE'),
+  ('random',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\random.py',
+   'PYMODULE'),
+  ('selectors',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\selectors.py',
+   'PYMODULE'),
+  ('shlex',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\shlex.py',
+   'PYMODULE'),
+  ('shutil',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\shutil.py',
+   'PYMODULE'),
+  ('signal',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\signal.py',
+   'PYMODULE'),
+  ('socket',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\socket.py',
+   'PYMODULE'),
+  ('ssl',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\ssl.py',
+   'PYMODULE'),
+  ('statistics',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\statistics.py',
+   'PYMODULE'),
+  ('string',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\string\\__init__.py',
+   'PYMODULE'),
+  ('stringprep',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\stringprep.py',
+   'PYMODULE'),
+  ('subprocess',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\subprocess.py',
+   'PYMODULE'),
+  ('sysconfig',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\sysconfig\\__init__.py',
+   'PYMODULE'),
+  ('tarfile',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\tarfile.py',
+   'PYMODULE'),
+  ('tempfile',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\tempfile.py',
+   'PYMODULE'),
+  ('textwrap',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\textwrap.py',
+   'PYMODULE'),
+  ('threading',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\threading.py',
+   'PYMODULE'),
+  ('tkinter',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\tkinter\\__init__.py',
+   'PYMODULE'),
+  ('tkinter.commondialog',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\tkinter\\commondialog.py',
+   'PYMODULE'),
+  ('tkinter.constants',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\tkinter\\constants.py',
+   'PYMODULE'),
+  ('tkinter.messagebox',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\tkinter\\messagebox.py',
+   'PYMODULE'),
+  ('tkinter.ttk',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\tkinter\\ttk.py',
+   'PYMODULE'),
+  ('token',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\token.py',
+   'PYMODULE'),
+  ('tokenize',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\tokenize.py',
+   'PYMODULE'),
+  ('tracemalloc',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\tracemalloc.py',
+   'PYMODULE'),
+  ('typing',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\typing.py',
+   'PYMODULE'),
+  ('urllib',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\urllib\\__init__.py',
+   'PYMODULE'),
+  ('urllib.error',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\urllib\\error.py',
+   'PYMODULE'),
+  ('urllib.parse',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\urllib\\parse.py',
+   'PYMODULE'),
+  ('urllib.request',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\urllib\\request.py',
+   'PYMODULE'),
+  ('urllib.response',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\urllib\\response.py',
+   'PYMODULE'),
+  ('webbrowser',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\webbrowser.py',
+   'PYMODULE'),
+  ('zipfile',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\zipfile\\__init__.py',
+   'PYMODULE'),
+  ('zipfile._path',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\zipfile\\_path\\__init__.py',
+   'PYMODULE'),
+  ('zipfile._path.glob',
+   'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
+   'booster\\.conda\\Lib\\zipfile\\_path\\glob.py',
+   'PYMODULE')])

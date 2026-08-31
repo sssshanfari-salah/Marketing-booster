@@ -3,6 +3,7 @@ import tempfile
 import unittest
 
 from clients_management import Client, ClientManager
+from clients_progress_ui import Plan
 
 
 class ClientManagerTests(unittest.TestCase):
@@ -55,6 +56,15 @@ class ClientManagerTests(unittest.TestCase):
 
         self.assertEqual(manager.clients[0].email, "nora@example.com")
         self.assertEqual(manager.clients[0].to_dict()["email"], "nora@example.com")
+
+    def test_plan_sync_keeps_pending_tasks_in_sync(self):
+        plan = Plan(Client("Sam", "123", "Marketing"), all_tasks=["Task 1", "Task 2", "Task 3"])
+        plan.pending_tasks = ["Task 1", "Task 3"]
+
+        plan.sync_task_lists(all_tasks=["Task 1", "Task 2", "Task 3", "Task 4"], pending_tasks=["Task 2", "Task 4"])
+
+        self.assertEqual(plan.all_tasks, ["Task 1", "Task 2", "Task 3", "Task 4"])
+        self.assertEqual(plan.pending_tasks, ["Task 2", "Task 4"])
 
 
 if __name__ == "__main__":
