@@ -1,5 +1,4 @@
-from clients_management import ClientManager
+from clients_progress_ui import safe_main
 
 if __name__ == "__main__":
-    manager = ClientManager("clients.json")
-manager.json2txt()
+    safe_main()

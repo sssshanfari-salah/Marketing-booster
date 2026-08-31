@@ -41,6 +41,21 @@ class ClientManagerTests(unittest.TestCase):
         self.assertEqual(len(loaded.clients), 1)
         self.assertEqual(loaded.clients[0].name, "John")
 
+    def test_manager_starts_with_loaded_clients(self):
+        manager = ClientManager(self.file_path)
+        self.assertEqual(manager.clients, [])
+
+        manager.add_client("Sarah", "777", "Design")
+        self.assertEqual(len(manager.clients), 1)
+        self.assertEqual(manager.clients[0].name, "Sarah")
+
+    def test_add_client_with_email(self):
+        manager = ClientManager(self.file_path)
+        manager.add_client("Nora", "555", "Consulting", "nora@example.com")
+
+        self.assertEqual(manager.clients[0].email, "nora@example.com")
+        self.assertEqual(manager.clients[0].to_dict()["email"], "nora@example.com")
+
 
 if __name__ == "__main__":
     unittest.main()

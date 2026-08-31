@@ -2,21 +2,43 @@
   {
     "name": "Bin Salim",
     "contact": "99999999",
-    "business": "machineries suppliers 'Hilti'"
+    "business": "machineries suppliers 'Hilti'",
+    "email": ""
   },
   {
     "name": "Ali Ahmed",
     "contact": "55555555",
-    "business": "Printing Services"
+    "business": "Printing Services",
+    "email": ""
   },
   {
     "name": "Bin Salim",
     "contact": "99999999",
-    "business": "machineries suppliers 'Hilti'"
+    "business": "machineries suppliers 'Hilti'",
+    "email": ""
   },
   {
     "name": "Ali Ahmed",
     "contact": "55555555",
-    "business": "Printing Services"
+    "business": "Printing Services",
+    "email": ""
+  },
+  {
+    "name": "Ali",
+    "contact": "N/A",
+    "business": "N/A",
+    "email": ""
+  },
+  {
+    "name": "Khalid Salim",
+    "contact": "97709770",
+    "business": "real estate management",
+    "email": ""
+  },
+  {
+    "name": "Fahad",
+    "contact": "90876587",
+    "business": "furniture",
+    "email": "fahad@gmail.co"
   }
 ]

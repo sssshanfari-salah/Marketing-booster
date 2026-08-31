@@ -4,24 +4,31 @@ from typing import List
 
 
 class Client:
-    def __init__(self, name: str, contact: str, business: str):
+    def __init__(self, name: str, contact: str, business: str, email: str = ""):
         self.name = name
         self.contact = contact
         self.business = business
+        self.email = email
 
     def to_dict(self):
         return {
             "name": self.name,
             "contact": self.contact,
             "business": self.business,
+            "email": self.email,
         }
 
     @classmethod
     def from_dict(cls, data):
-        return cls(data["name"], data["contact"], data["business"])
+        return cls(
+            data.get("name", ""),
+            data.get("contact", ""),
+            data.get("business", ""),
+            data.get("email", ""),
+        )
 
     def __repr__(self):
-        return f"Client name: {self.name}\nContact: {self.contact}\nType of business: {self.business}"
+        return f"Client name: {self.name}\nContact: {self.contact}\nType of business: {self.business}\nEmail: {self.email}"
 
 
 class ClientManager:
@@ -29,9 +36,11 @@ class ClientManager:
         if file_path is None:
             file_path = Path(__file__).resolve().parent.parent / "clients.json"
         self.file_path = Path(file_path)
+        self.clients = []
+        self.load_clients()
 
-    def add_client(self, name: str, contact: str, business: str):
-        client = Client(name, contact, business)
+    def add_client(self, name: str, contact: str, business: str, email: str = ""):
+        client = Client(name, contact, business, email)
         self.clients.append(client)
         self.save_clients()
 
@@ -41,7 +50,8 @@ class ClientManager:
 
         result = []
         for client in self.clients:
-            result.append(f"{client.name} | {client.contact} | {client.business}")
+            email_info = f" | {client.email}" if client.email else ""
+            result.append(f"{client.name} | {client.contact} | {client.business}{email_info}")
         return "\n".join(result)
 
     def search_clients(self, keyword: str):
@@ -52,9 +62,11 @@ class ClientManager:
             if keyword_lower in client.name.lower()
             or keyword_lower in client.contact.lower()
             or keyword_lower in client.business.lower()
+            or keyword_lower in client.email.lower()
         ]
 
     def save_clients(self):
+        self.file_path.parent.mkdir(parents=True, exist_ok=True)
         payload = [client.to_dict() for client in self.clients]
         self.file_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
 
