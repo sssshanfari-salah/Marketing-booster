@@ -106,21 +106,21 @@ class TaskDetailsWindow(tk.Toplevel):
         main = ttk.Frame(self, padding=14)
         main.pack(fill="both", expand=True)
 
-        ttk.Label(main, text=f"Client: {client_name}", font=("Segoe UI", 10, "bold")).pack(anchor="w", pady=(0, 10))
+        ttk.Label(main, text=f"Client: {client_name}", font=("Segoe UI", 11, "bold")).pack(anchor="w", pady=(0, 10))
 
         task_columns = ttk.Frame(main)
         task_columns.pack(fill="both", expand=True)
         task_columns.columnconfigure(0, weight=1)
         task_columns.columnconfigure(1, weight=1)
 
-        ttk.Label(task_columns, text="All Tasks", font=("Segoe UI", 9, "bold")).grid(row=0, column=0, sticky="w", padx=(0, 8), pady=(0, 6))
-        ttk.Label(task_columns, text="Pending Tasks", font=("Segoe UI", 9, "bold")).grid(row=0, column=1, sticky="w", pady=(0, 6))
+        ttk.Label(task_columns, text="All Tasks", font=("Segoe UI", 11, "bold")).grid(row=0, column=0, sticky="w", padx=(0, 8), pady=(0, 6))
+        ttk.Label(task_columns, text="Pending Tasks", font=("Segoe UI", 11, "bold")).grid(row=0, column=1, sticky="w", pady=(0, 6))
 
         all_scroll = ttk.Scrollbar(task_columns, orient="vertical")
         pending_scroll = ttk.Scrollbar(task_columns, orient="vertical")
 
-        self.all_box = tk.Listbox(task_columns, height=14, exportselection=False, font=("Segoe UI", 9), yscrollcommand=all_scroll.set)
-        self.pending_box = tk.Listbox(task_columns, height=14, exportselection=False, bg="#fffef5", font=("Segoe UI", 9), yscrollcommand=pending_scroll.set)
+        self.all_box = tk.Listbox(task_columns, height=14, exportselection=False, font=("Segoe UI", 11), yscrollcommand=all_scroll.set)
+        self.pending_box = tk.Listbox(task_columns, height=14, exportselection=False, bg="#fffef5", font=("Segoe UI", 11), yscrollcommand=pending_scroll.set)
 
         self.all_box.grid(row=1, column=0, sticky="nsew", padx=(0, 6), pady=(0, 10))
         all_scroll.grid(row=1, column=0, sticky="ns", padx=(0, 0), pady=(0, 10))
@@ -297,11 +297,15 @@ class ProgressApp(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("Client Progress Tracker")
-        self.geometry("850x600")
-        self.minsize(760, 500)
+        self.screen_width = self.winfo_screenwidth()
+        self.screen_height = self.winfo_screenheight()
+        self.geometry(f"{max(1000, self.screen_width - 120)}x{max(680, self.screen_height - 120)}")
+        self.minsize(980, 620)
 
         self.style = ttk.Style(self)
         self.style.theme_use("clam")
+        self.option_add("*Font", "{Segoe UI} 11")
+        self.style.configure(".", font=("Segoe UI", 11))
 
         self.client_file = self.resolve_client_file()
         self.client_manager = ClientManager(self.client_file)
@@ -320,9 +324,9 @@ class ProgressApp(tk.Tk):
 
     def build_ui(self):
         self.style.configure("Section.TLabelframe", padding=(12, 10), relief="groove")
-        self.style.configure("Section.TLabelframe.Label", font=("Segoe UI", 10, "bold"))
-        self.style.configure("Header.TLabel", font=("Segoe UI", 12, "bold"))
-        self.style.configure("Action.TButton", padding=(10, 6))
+        self.style.configure("Section.TLabelframe.Label", font=("Segoe UI", 11, "bold"))
+        self.style.configure("Header.TLabel", font=("Segoe UI", 11, "bold"))
+        self.style.configure("Action.TButton", padding=(8, 5))
         self.style.configure("Red.Horizontal.TProgressbar", background="#d32f2f", troughcolor="#e0e0e0")
         self.style.configure("Yellow.Horizontal.TProgressbar", background="#f9a825", troughcolor="#e0e0e0")
         self.style.configure("Green.Horizontal.TProgressbar", background="#2e7d32", troughcolor="#e0e0e0")
@@ -366,7 +370,7 @@ class ProgressApp(tk.Tk):
 
         ttk.Label(progress_box, text="Progress").grid(row=0, column=0, sticky="w", padx=(10, 12), pady=(12, 6))
         self.progress_var = tk.StringVar(value="0%")
-        ttk.Label(progress_box, textvariable=self.progress_var, font=("Segoe UI", 14, "bold")).grid(row=0, column=1, sticky="w", padx=(0, 10), pady=(12, 6))
+        ttk.Label(progress_box, textvariable=self.progress_var, font=("Segoe UI", 11, "bold")).grid(row=0, column=1, sticky="w", padx=(0, 10), pady=(12, 6))
 
         self.progress_bar = ttk.Progressbar(progress_box, orient="horizontal", length=500, mode="determinate")
         self.progress_bar.grid(row=1, column=0, columnspan=2, sticky="ew", padx=(10, 10), pady=(0, 12))
@@ -382,8 +386,8 @@ class ProgressApp(tk.Tk):
         tasks_frame.columnconfigure(1, weight=1)
         tasks_frame.rowconfigure(1, weight=1)
 
-        ttk.Label(tasks_frame, text="All Tasks", font=("Segoe UI", 9, "bold")).grid(row=0, column=0, sticky="w", padx=(10, 0), pady=(10, 4))
-        ttk.Label(tasks_frame, text="Pending Tasks", font=("Segoe UI", 9, "bold")).grid(row=0, column=1, sticky="w", padx=(10, 0), pady=(10, 4))
+        ttk.Label(tasks_frame, text="All Tasks", font=("Segoe UI", 11, "bold")).grid(row=0, column=0, sticky="w", padx=(10, 0), pady=(10, 4))
+        ttk.Label(tasks_frame, text="Pending Tasks", font=("Segoe UI", 11, "bold")).grid(row=0, column=1, sticky="w", padx=(10, 0), pady=(10, 4))
 
         all_scroll = ttk.Scrollbar(tasks_frame, orient="vertical")
         pending_scroll = ttk.Scrollbar(tasks_frame, orient="vertical")
@@ -395,7 +399,7 @@ class ProgressApp(tk.Tk):
             exportselection=False,
             bg="#ffffff",
             selectmode="browse",
-            font=("Segoe UI", 9),
+            font=("Segoe UI", 11),
             yscrollcommand=all_scroll.set,
             relief="solid",
             borderwidth=1,
@@ -407,7 +411,7 @@ class ProgressApp(tk.Tk):
             exportselection=False,
             bg="#fffef5",
             selectmode="browse",
-            font=("Segoe UI", 9),
+            font=("Segoe UI", 11),
             yscrollcommand=pending_scroll.set,
             relief="solid",
             borderwidth=1,
@@ -427,21 +431,26 @@ class ProgressApp(tk.Tk):
         self.new_task_entry = ttk.Entry(task_entry_row, textvariable=self.new_task_var)
         self.new_task_entry.pack(side="left", fill="x", expand=True)
 
-        button_row = ttk.Frame(tasks_frame)
-        button_row.grid(row=3, column=0, columnspan=4, sticky="ew", padx=(10, 10), pady=(0, 12))
+        button_row_1 = ttk.Frame(tasks_frame)
+        button_row_1.grid(row=3, column=0, columnspan=4, sticky="ew", padx=(10, 10), pady=(0, 8))
 
-        ttk.Button(button_row, text="Add Task", command=self.add_task, style="Action.TButton").pack(side="left", padx=(0, 8))
-        ttk.Button(button_row, text="Tasks Details", command=self.open_task_details_window, style="Action.TButton").pack(side="left", padx=(0, 8))
-        ttk.Button(button_row, text="Refresh Progress", command=self.refresh_display, style="Action.TButton").pack(side="left", padx=(0, 8))
-        ttk.Button(button_row, text="Open All Clients", command=self.open_all_clients, style="Action.TButton").pack(side="left", padx=(0, 8))
-        ttk.Button(button_row, text="Send Email", command=self.send_email_to_client, style="Action.TButton").pack(side="left", padx=(0, 8))
-        ttk.Button(button_row, text="Save & Exit", command=self.save_and_exit, style="Action.TButton").pack(side="left", padx=(0, 8))
-        ttk.Button(button_row, text="Cancel", command=self.cancel_and_exit, style="Action.TButton").pack(side="left")
+        ttk.Button(button_row_1, text="Add Task", command=self.add_task, style="Action.TButton").pack(side="left", padx=(0, 8))
+        ttk.Button(button_row_1, text="Tasks Details", command=self.open_task_details_window, style="Action.TButton").pack(side="left", padx=(0, 8))
+        ttk.Button(button_row_1, text="Refresh Progress", command=self.refresh_display, style="Action.TButton").pack(side="left", padx=(0, 8))
+
+        button_row_2 = ttk.Frame(tasks_frame)
+        button_row_2.grid(row=4, column=0, columnspan=4, sticky="ew", padx=(10, 10), pady=(0, 12))
+
+        ttk.Button(button_row_2, text="Open All Clients", command=self.open_all_clients, style="Action.TButton").pack(side="left", padx=(0, 8))
+        ttk.Button(button_row_2, text="Send Email", command=self.send_email_to_client, style="Action.TButton").pack(side="left", padx=(0, 8))
+        ttk.Button(button_row_2, text="Save & Exit", command=self.save_and_exit, style="Action.TButton").pack(side="left", padx=(0, 8))
+        ttk.Button(button_row_2, text="Cancel", command=self.cancel_and_exit, style="Action.TButton").pack(side="left")
 
         main.columnconfigure(0, weight=1)
         main.columnconfigure(1, weight=1)
         main.rowconfigure(4, weight=3)
         progress_box.columnconfigure(1, weight=1)
+        tasks_frame.rowconfigure(1, weight=1)
 
         self.clear_client_form()
 
