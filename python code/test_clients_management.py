@@ -57,6 +57,17 @@ class ClientManagerTests(unittest.TestCase):
         self.assertEqual(manager.clients[0].email, "nora@example.com")
         self.assertEqual(manager.clients[0].to_dict()["email"], "nora@example.com")
 
+    def test_delete_client_removes_selected_client(self):
+        manager = ClientManager(self.file_path)
+        manager.add_client("Ali", "123", "Stationery")
+        manager.add_client("Sara", "456", "Electronics")
+
+        removed = manager.delete_client("Ali")
+
+        self.assertTrue(removed)
+        self.assertEqual(len(manager.clients), 1)
+        self.assertEqual(manager.clients[0].name, "Sara")
+
     def test_plan_sync_keeps_pending_tasks_in_sync(self):
         plan = Plan(Client("Sam", "123", "Marketing"), all_tasks=["Task 1", "Task 2", "Task 3"])
         plan.pending_tasks = ["Task 1", "Task 3"]

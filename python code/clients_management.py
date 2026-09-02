@@ -44,6 +44,23 @@ class ClientManager:
         self.clients.append(client)
         self.save_clients()
 
+    def delete_client(self, name: str):
+        if not name or not isinstance(name, str):
+            return False
+
+        target_name = name.strip()
+        if not target_name:
+            return False
+
+        before = len(self.clients)
+        self.clients = [client for client in self.clients if client.name.lower() != target_name.lower()]
+
+        if len(self.clients) == before:
+            return False
+
+        self.save_clients()
+        return True
+
     def list_clients(self):
         if not self.clients:
             return "No clients found."

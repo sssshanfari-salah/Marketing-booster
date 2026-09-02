@@ -211,6 +211,7 @@ class AllClientsProgressWindow(tk.Toplevel):
         button_row = ttk.Frame(self)
         button_row.pack(pady=(0, 12))
         ttk.Button(button_row, text="Edit Selected Client", command=self.edit_selected_client).pack(side="left", padx=(0, 8))
+        ttk.Button(button_row, text="Delete Selected Client", command=self.delete_selected_client).pack(side="left", padx=(0, 8))
         ttk.Button(button_row, text="Refresh", command=self.refresh_view).pack(side="left")
         self.refresh_view()
 
@@ -231,6 +232,36 @@ class AllClientsProgressWindow(tk.Toplevel):
             self.master.load_client_progress(client_name, business)
 
         self.destroy()
+
+    def delete_selected_client(self):
+        selection = self.tree.selection()
+        if not selection:
+            messagebox.showwarning("No client selected", "Select a client row first.")
+            return
+
+        values = self.tree.item(selection[0], "values")
+        if not values:
+            return
+
+        client_name = values[0]
+        confirm = messagebox.askyesno(
+            "Delete client?",
+            f"Are you sure you want to delete '{client_name}' from the client list?",
+        )
+        if not confirm:
+            return
+
+        if self.manager.delete_client(client_name):
+            Plan.Clients_progress.pop(client_name, None)
+            if self.master and hasattr(self.master, "refresh_client_combo"):
+                self.master.refresh_client_combo()
+            if self.master and hasattr(self.master, "clear_client_form"):
+                self.master.clear_client_form()
+            messagebox.showinfo("Client deleted", f"'{client_name}' was removed successfully.")
+            self.refresh_view()
+            return
+
+        messagebox.showwarning("Client not found", f"'{client_name}' was not found in the saved client list.")
 
     def refresh_view(self):
         for item in self.tree.get_children():
@@ -363,6 +394,7 @@ class ProgressApp(tk.Tk):
         action_row = ttk.Frame(main)
         action_row.grid(row=2, column=0, columnspan=2, sticky="ew", pady=(0, 12))
         ttk.Button(action_row, text="Create Client Plan", command=self.create_plan, style="Action.TButton").pack(side="left", padx=(0, 8))
+        ttk.Button(action_row, text="Delete Selected Client", command=self.delete_selected_client, style="Action.TButton").pack(side="left")
 
         progress_box = ttk.LabelFrame(main, text="Progress Overview", style="Section.TLabelframe")
         progress_box.grid(row=3, column=0, columnspan=2, sticky="ew", pady=(0, 12))
@@ -431,20 +463,16 @@ class ProgressApp(tk.Tk):
         self.new_task_entry = ttk.Entry(task_entry_row, textvariable=self.new_task_var)
         self.new_task_entry.pack(side="left", fill="x", expand=True)
 
-        button_row_1 = ttk.Frame(tasks_frame)
-        button_row_1.grid(row=3, column=0, columnspan=4, sticky="ew", padx=(10, 10), pady=(0, 8))
+        button_row = ttk.Frame(tasks_frame)
+        button_row.grid(row=3, column=0, columnspan=4, sticky="ew", padx=(10, 10), pady=(0, 12))
 
-        ttk.Button(button_row_1, text="Add Task", command=self.add_task, style="Action.TButton").pack(side="left", padx=(0, 8))
-        ttk.Button(button_row_1, text="Tasks Details", command=self.open_task_details_window, style="Action.TButton").pack(side="left", padx=(0, 8))
-        ttk.Button(button_row_1, text="Refresh Progress", command=self.refresh_display, style="Action.TButton").pack(side="left", padx=(0, 8))
-
-        button_row_2 = ttk.Frame(tasks_frame)
-        button_row_2.grid(row=4, column=0, columnspan=4, sticky="ew", padx=(10, 10), pady=(0, 12))
-
-        ttk.Button(button_row_2, text="Open All Clients", command=self.open_all_clients, style="Action.TButton").pack(side="left", padx=(0, 8))
-        ttk.Button(button_row_2, text="Send Email", command=self.send_email_to_client, style="Action.TButton").pack(side="left", padx=(0, 8))
-        ttk.Button(button_row_2, text="Save & Exit", command=self.save_and_exit, style="Action.TButton").pack(side="left", padx=(0, 8))
-        ttk.Button(button_row_2, text="Cancel", command=self.cancel_and_exit, style="Action.TButton").pack(side="left")
+        ttk.Button(button_row, text="Add Task", command=self.add_task, style="Action.TButton").pack(side="left", padx=(0, 8))
+        ttk.Button(button_row, text="Tasks Details", command=self.open_task_details_window, style="Action.TButton").pack(side="left", padx=(0, 8))
+        ttk.Button(button_row, text="Refresh Progress", command=self.refresh_display, style="Action.TButton").pack(side="left", padx=(0, 8))
+        ttk.Button(button_row, text="Open All Clients", command=self.open_all_clients, style="Action.TButton").pack(side="left", padx=(0, 8))
+        ttk.Button(button_row, text="Send Email", command=self.send_email_to_client, style="Action.TButton").pack(side="left", padx=(0, 8))
+        ttk.Button(button_row, text="Save & Exit", command=self.save_and_exit, style="Action.TButton").pack(side="left", padx=(0, 8))
+        ttk.Button(button_row, text="Cancel", command=self.cancel_and_exit, style="Action.TButton").pack(side="left")
 
         main.columnconfigure(0, weight=1)
         main.columnconfigure(1, weight=1)
@@ -516,6 +544,29 @@ class ProgressApp(tk.Tk):
         if total <= 0:
             return []
         return [f"Task {i}" for i in range(1, total + 1)]
+
+    def delete_selected_client(self):
+        name = self.client_name_var.get().strip()
+        if not name or name == "<New Client>":
+            messagebox.showwarning("No client selected", "Select an existing client first.")
+            return
+
+        confirm = messagebox.askyesno(
+            "Delete client?",
+            f"Are you sure you want to delete '{name}' from the client list?",
+        )
+        if not confirm:
+            return
+
+        removed = self.client_manager.delete_client(name)
+        if not removed:
+            messagebox.showwarning("Client not found", f"'{name}' was not found in the saved client list.")
+            return
+
+        Plan.Clients_progress.pop(name, None)
+        self.refresh_client_combo()
+        self.clear_client_form()
+        messagebox.showinfo("Client deleted", f"'{name}' was removed successfully.")
 
     def create_plan(self):
         name = self.client_name_var.get().strip()
