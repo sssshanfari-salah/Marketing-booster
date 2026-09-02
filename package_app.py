@@ -10,7 +10,7 @@ BUILD_DIR = APP_DIR / "build"
 SPEC_FILE = APP_DIR / "marketing_booster.spec"
 DESKTOP_DIR = Path.home() / "Desktop"
 TARGET_EXE = DIST_DIR / "marketing_booster" / "marketing_booster.exe"
-TARGET_ICON = SOURCE_DIR / "icon.ico"
+TARGET_ICON = APP_DIR / "starco_icon.ico"
 
 
 def ensure_pyinstaller():

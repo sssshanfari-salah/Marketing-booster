@@ -3,8 +3,7 @@
  False,
  False,
  False,
- 'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
- 'booster\\.conda\\Lib\\site-packages\\PyInstaller\\bootloader\\images\\icon-windowed.ico',
+ ['C:/Users/ssssh/OneDrive/Documents/Marketing booster/starco_icon.ico'],
  None,
  False,
  False,
@@ -4040,7 +4039,7 @@
  [],
  False,
  False,
- 1788337402,
+ 1788341450,
  [('runw.exe',
    'c:\\Users\\ssssh\\OneDrive\\Documents\\Marketing '
    'booster\\.conda\\Lib\\site-packages\\PyInstaller\\bootloader\\Windows-64bit-intel\\runw.exe',
