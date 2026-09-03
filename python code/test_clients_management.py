@@ -1,9 +1,15 @@
 import os
 import tempfile
 import unittest
+from pathlib import Path
 
 from clients_management import Client, ClientManager
 from clients_progress_ui import Plan, parse_task_items
+
+try:
+    from package_app import resolve_desktop_paths
+except ImportError:
+    resolve_desktop_paths = None
 
 
 class ClientManagerTests(unittest.TestCase):
@@ -97,6 +103,14 @@ class ClientManagerTests(unittest.TestCase):
 
         tasks = parse_task_items("", fallback_total=3)
         self.assertEqual(tasks, ["Task 1", "Task 2", "Task 3"])
+
+    def test_resolve_desktop_paths_prefer_windows_desktop_locations(self):
+        if resolve_desktop_paths is None:
+            self.fail("resolve_desktop_paths is not available")
+
+        desktop_paths = resolve_desktop_paths()
+        self.assertTrue(len(desktop_paths) >= 1)
+        self.assertIn(Path.home() / "Desktop", desktop_paths)
 
 
 if __name__ == "__main__":
