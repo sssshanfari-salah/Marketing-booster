@@ -11,7 +11,7 @@ SPEC_FILE = APP_DIR / "marketing_booster.spec"
 TARGET_ICON = APP_DIR / "starco_icon.ico"
 
 
-def resolve_desktop_paths():
+def resolve_desktop_dir():
     home = Path.home()
     candidate_paths = [
         home / "Desktop",
@@ -20,22 +20,15 @@ def resolve_desktop_paths():
         home / "OneDrive - Business" / "Desktop",
     ]
 
-    seen = set()
-    ordered = []
     for candidate in candidate_paths:
         resolved = candidate.resolve(strict=False)
-        if resolved not in seen:
-            seen.add(resolved)
-            ordered.append(resolved)
+        if resolved.exists():
+            return resolved
 
-    existing = [path for path in ordered if path.exists()]
-    if existing:
-        return existing
-
-    return ordered or [home / "Desktop"]
+    return (home / "Desktop").resolve(strict=False)
 
 
-DESKTOP_DIR = resolve_desktop_paths()[0]
+DESKTOP_DIR = resolve_desktop_dir()
 
 
 def find_built_exe():
@@ -127,31 +120,25 @@ def create_shortcut():
         print("python -m pip install pywin32")
         return None
 
-    created_links = []
-    for desktop_dir in resolve_desktop_paths():
-        desktop_dir.mkdir(parents=True, exist_ok=True)
-        desktop_link = desktop_dir / "Marketing Booster.lnk"
+    DESKTOP_DIR.mkdir(parents=True, exist_ok=True)
+    desktop_link = DESKTOP_DIR / "Marketing Booster.lnk"
 
-        try:
-            import win32com.client as win32com_client
-        except ImportError:
-            print("pywin32 is required to create the desktop shortcut. Install it with:")
-            print("python -m pip install pywin32")
-            return None
+    try:
+        import win32com.client as win32com_client
+    except ImportError:
+        print("pywin32 is required to create the desktop shortcut. Install it with:")
+        print("python -m pip install pywin32")
+        return None
 
-        shell = win32com_client.Dispatch("WScript.Shell")
-        shortcut = shell.CreateShortCut(str(desktop_link))
-        shortcut.Targetpath = str(exe_path)
-        shortcut.WorkingDirectory = str(exe_path.parent)
-        shortcut.IconLocation = str(TARGET_ICON if TARGET_ICON.exists() else exe_path)
-        shortcut.save()
-        created_links.append(desktop_link)
+    shell = win32com_client.Dispatch("WScript.Shell")
+    shortcut = shell.CreateShortCut(str(desktop_link))
+    shortcut.Targetpath = str(exe_path)
+    shortcut.WorkingDirectory = str(exe_path.parent)
+    shortcut.IconLocation = str(TARGET_ICON if TARGET_ICON.exists() else exe_path)
+    shortcut.save()
 
-    if created_links:
-        print(f"Shortcut created: {created_links[0]}")
-        if len(created_links) > 1:
-            print(f"Also created: {', '.join(str(path) for path in created_links[1:])}")
-    return created_links[0] if created_links else None
+    print(f"Shortcut created: {desktop_link}")
+    return desktop_link
 
 
 if __name__ == "__main__":

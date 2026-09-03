@@ -56,6 +56,9 @@ class ClientManager:
         if file_path is None:
             file_path = Path(__file__).resolve().parent.parent / "clients.json"
         self.file_path = Path(file_path)
+        self.file_path.parent.mkdir(parents=True, exist_ok=True)
+        if not self.file_path.exists():
+            self.file_path.write_text("[]", encoding="utf-8")
         self.clients = []
         self.load_clients()
 

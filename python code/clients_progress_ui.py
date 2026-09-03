@@ -7,6 +7,8 @@ from tkinter import ttk, messagebox
 
 from clients_management import Client, ClientManager
 
+APP_ICON = Path(__file__).resolve().parent.parent / "starco_icon.ico"
+
 
 def safe_main():
     try:
@@ -392,11 +394,21 @@ class ProgressApp(tk.Tk):
                 return candidate
 
         fallback = Path(sys.executable).resolve().parent / "clients.json"
+        fallback.parent.mkdir(parents=True, exist_ok=True)
+        if not fallback.exists():
+            fallback.write_text("[]", encoding="utf-8")
         return fallback
 
     def __init__(self):
         super().__init__()
-        self.title("Client Progress Tracker")
+        self.title("Marketing Booster")
+
+        if APP_ICON.exists():
+            try:
+                self.iconbitmap(str(APP_ICON))
+            except tk.TclError:
+                pass
+
         self.screen_width = self.winfo_screenwidth()
         self.screen_height = self.winfo_screenheight()
         self.geometry(f"{max(920, self.screen_width - 180)}x{max(620, self.screen_height - 180)}")
@@ -408,6 +420,9 @@ class ProgressApp(tk.Tk):
         self.style.configure(".", font=("Segoe UI", 8))
 
         self.client_file = self.resolve_client_file()
+        if not self.client_file.exists():
+            self.client_file.parent.mkdir(parents=True, exist_ok=True)
+            self.client_file.write_text("[]", encoding="utf-8")
         self.client_manager = ClientManager(self.client_file)
 
         self.client_name_var = tk.StringVar(value="")
