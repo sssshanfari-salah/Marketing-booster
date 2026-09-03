@@ -23,6 +23,23 @@ def safe_main():
         raise SystemExit(1)
 
 
+def parse_task_items(raw_value, fallback_total=0):
+    text = (raw_value or "").strip()
+    if not text:
+        if fallback_total <= 0:
+            return []
+        return [f"Task {i}" for i in range(1, fallback_total + 1)]
+
+    items = []
+    for chunk in text.replace("\r\n", "\n").replace("\r", "\n").split("\n"):
+        for item in chunk.split(","):
+            task = item.strip()
+            if task:
+                items.append(task)
+
+    return items
+
+
 class Plan:
     Clients_progress = {}
 
@@ -183,6 +200,58 @@ class TaskDetailsWindow(tk.Toplevel):
         self.populate_lists(all_tasks=self.plan.all_tasks, pending_tasks=self.plan.pending_tasks)
 
 
+class ClientReviewsLogWindow(tk.Toplevel):
+    def __init__(self, master=None, manager=None):
+        super().__init__(master)
+        self.title("Client Reviews Log")
+        self.geometry("900x500")
+        self.minsize(760, 360)
+
+        self.manager = manager or ClientManager("clients.json")
+        self.manager.load_clients()
+
+        self.tree = ttk.Treeview(
+            self,
+            columns=("client", "business", "date", "review"),
+            show="headings",
+            height=18,
+        )
+        self.tree.heading("client", text="Client")
+        self.tree.heading("business", text="Business")
+        self.tree.heading("date", text="Date")
+        self.tree.heading("review", text="Review")
+        self.tree.column("client", width=170, anchor="w")
+        self.tree.column("business", width=170, anchor="w")
+        self.tree.column("date", width=160, anchor="center")
+        self.tree.column("review", width=360, anchor="w")
+        self.tree.pack(fill="both", expand=True, padx=12, pady=(12, 8))
+
+        self.refresh_view()
+
+        ttk.Button(self, text="Close", command=self.destroy).pack(pady=(0, 12))
+
+    def refresh_view(self):
+        for item in self.tree.get_children():
+            self.tree.delete(item)
+
+        reviews = self.manager.get_all_reviews()
+        if not reviews:
+            self.tree.insert("", tk.END, values=("No reviews yet", "", "", ""))
+            return
+
+        for review in reviews:
+            self.tree.insert(
+                "",
+                tk.END,
+                values=(
+                    review.get("client_name", ""),
+                    review.get("business", ""),
+                    review.get("date", ""),
+                    review.get("review", ""),
+                ),
+            )
+
+
 class AllClientsProgressWindow(tk.Toplevel):
     def __init__(self, master=None):
         super().__init__(master)
@@ -330,13 +399,13 @@ class ProgressApp(tk.Tk):
         self.title("Client Progress Tracker")
         self.screen_width = self.winfo_screenwidth()
         self.screen_height = self.winfo_screenheight()
-        self.geometry(f"{max(1000, self.screen_width - 120)}x{max(680, self.screen_height - 120)}")
-        self.minsize(980, 620)
+        self.geometry(f"{max(920, self.screen_width - 180)}x{max(620, self.screen_height - 180)}")
+        self.minsize(900, 560)
 
         self.style = ttk.Style(self)
         self.style.theme_use("clam")
-        self.option_add("*Font", "{Segoe UI} 11")
-        self.style.configure(".", font=("Segoe UI", 11))
+        self.option_add("*Font", "{Segoe UI} 8")
+        self.style.configure(".", font=("Segoe UI", 8))
 
         self.client_file = self.resolve_client_file()
         self.client_manager = ClientManager(self.client_file)
@@ -344,7 +413,9 @@ class ProgressApp(tk.Tk):
         self.client_name_var = tk.StringVar(value="")
         self.contact_var = tk.StringVar(value="")
         self.business_var = tk.StringVar(value="")
+        self.shop_number_var = tk.StringVar(value="")
         self.email_var = tk.StringVar(value="")
+        self.review_var = tk.StringVar(value="")
         self.total_tasks_var = tk.StringVar(value="0")
         self.new_task_var = tk.StringVar()
 
@@ -354,96 +425,135 @@ class ProgressApp(tk.Tk):
         self.build_ui()
 
     def build_ui(self):
-        self.style.configure("Section.TLabelframe", padding=(12, 10), relief="groove")
-        self.style.configure("Section.TLabelframe.Label", font=("Segoe UI", 11, "bold"))
-        self.style.configure("Header.TLabel", font=("Segoe UI", 11, "bold"))
-        self.style.configure("Action.TButton", padding=(8, 5))
+        self.style.configure("Section.TLabelframe", padding=(10, 8), relief="groove")
+        self.style.configure("Section.TLabelframe.Label", font=("Segoe UI", 8, "bold"))
+        self.style.configure("Header.TLabel", font=("Segoe UI", 8, "bold"))
+        self.style.configure("Action.TButton", padding=(7, 3))
         self.style.configure("Red.Horizontal.TProgressbar", background="#d32f2f", troughcolor="#e0e0e0")
         self.style.configure("Yellow.Horizontal.TProgressbar", background="#f9a825", troughcolor="#e0e0e0")
         self.style.configure("Green.Horizontal.TProgressbar", background="#2e7d32", troughcolor="#e0e0e0")
 
-        main = ttk.Frame(self, padding=18)
+        main = ttk.Frame(self, padding=14)
         main.pack(fill="both", expand=True)
 
+        main.columnconfigure(0, weight=25)
+        main.columnconfigure(1, weight=25)
+        main.columnconfigure(2, weight=20)
+        main.columnconfigure(3, weight=30)
+        main.rowconfigure(1, weight=1)
+        main.rowconfigure(2, weight=0)
+        main.rowconfigure(3, weight=1)
+
         title = ttk.Label(main, text="Client Progress Manager", style="Header.TLabel")
-        title.grid(row=0, column=0, columnspan=2, sticky="w", pady=(0, 12))
+        title.grid(row=0, column=0, columnspan=4, sticky="w", pady=(0, 8))
 
         details_frame = ttk.LabelFrame(main, text="Client Details", style="Section.TLabelframe")
-        details_frame.grid(row=1, column=0, columnspan=2, sticky="ew", padx=0, pady=(0, 14))
-
+        details_frame.grid(row=1, column=0, columnspan=2, sticky="nsew", padx=(0, 6), pady=(0, 8))
         details_frame.columnconfigure(1, weight=1)
 
-        ttk.Label(details_frame, text="Client Name").grid(row=0, column=0, sticky="w", padx=(10, 12), pady=(12, 8))
+        ttk.Label(details_frame, text="Client Name").grid(row=0, column=0, sticky="w", padx=(10, 12), pady=(8, 6))
         self.client_combo = ttk.Combobox(details_frame, textvariable=self.client_name_var, state="normal")
-        self.client_combo.grid(row=0, column=1, sticky="ew", padx=(0, 10), pady=(12, 8))
+        self.client_combo.grid(row=0, column=1, sticky="ew", padx=(0, 10), pady=(8, 6))
         self.client_combo.bind("<<ComboboxSelected>>", self.on_client_name_selected)
         self.refresh_client_combo()
 
-        ttk.Label(details_frame, text="Contact").grid(row=1, column=0, sticky="w", padx=(10, 12), pady=(0, 8))
+        ttk.Label(details_frame, text="Contact").grid(row=1, column=0, sticky="w", padx=(10, 12), pady=(0, 6))
         self.contact_entry = ttk.Entry(details_frame, textvariable=self.contact_var)
-        self.contact_entry.grid(row=1, column=1, sticky="ew", padx=(0, 10), pady=(0, 8))
+        self.contact_entry.grid(row=1, column=1, sticky="ew", padx=(0, 10), pady=(0, 6))
 
-        ttk.Label(details_frame, text="Business").grid(row=2, column=0, sticky="w", padx=(10, 12), pady=(0, 8))
+        ttk.Label(details_frame, text="Business").grid(row=2, column=0, sticky="w", padx=(10, 12), pady=(0, 6))
         self.business_entry = ttk.Entry(details_frame, textvariable=self.business_var)
-        self.business_entry.grid(row=2, column=1, sticky="ew", padx=(0, 10), pady=(0, 8))
+        self.business_entry.grid(row=2, column=1, sticky="ew", padx=(0, 10), pady=(0, 6))
 
-        ttk.Label(details_frame, text="Email").grid(row=3, column=0, sticky="w", padx=(10, 12), pady=(0, 10))
+        ttk.Label(details_frame, text="Shop Number").grid(row=3, column=0, sticky="w", padx=(10, 12), pady=(0, 6))
+        self.shop_number_entry = ttk.Entry(details_frame, textvariable=self.shop_number_var)
+        self.shop_number_entry.grid(row=3, column=1, sticky="ew", padx=(0, 10), pady=(0, 6))
+
+        ttk.Label(details_frame, text="Email").grid(row=4, column=0, sticky="w", padx=(10, 12), pady=(0, 8))
         self.email_entry = ttk.Entry(details_frame, textvariable=self.email_var)
-        self.email_entry.grid(row=3, column=1, sticky="ew", padx=(0, 10), pady=(0, 10))
+        self.email_entry.grid(row=4, column=1, sticky="ew", padx=(0, 10), pady=(0, 8))
+
+        review_frame = ttk.LabelFrame(main, text="Client Review", style="Section.TLabelframe")
+        review_frame.grid(row=1, column=2, columnspan=2, sticky="nsew", padx=(6, 0), pady=(0, 8))
+        review_frame.columnconfigure(0, weight=1)
+
+        self.review_text = tk.Text(review_frame, width=30, height=4, wrap="word", font=("Segoe UI", 9))
+        self.review_text.grid(row=0, column=0, sticky="nsew", padx=(10, 10), pady=(8, 6))
+
+        review_buttons = ttk.Frame(review_frame)
+        review_buttons.grid(row=1, column=0, sticky="w", padx=(10, 10), pady=(0, 8))
+        ttk.Button(review_buttons, text="Add Review", command=self.add_client_review, style="Action.TButton").pack(side="left", padx=(0, 8))
+        ttk.Button(review_buttons, text="Open Review Log", command=self.open_reviews_log, style="Action.TButton").pack(side="left")
 
         action_row = ttk.Frame(main)
-        action_row.grid(row=2, column=0, columnspan=2, sticky="ew", pady=(0, 12))
-        ttk.Button(action_row, text="Create Client Plan", command=self.create_plan, style="Action.TButton").pack(side="left", padx=(0, 8))
-        ttk.Button(action_row, text="Delete Selected Client", command=self.delete_selected_client, style="Action.TButton").pack(side="left")
+        action_row.grid(row=2, column=0, columnspan=4, sticky="ew", pady=(0, 8))
+        action_row.columnconfigure(0, weight=1)
+        action_row.columnconfigure(1, weight=1)
+
+        action_center = ttk.Frame(action_row)
+        action_center.grid(row=0, column=0, columnspan=2, sticky="n")
+        ttk.Button(action_center, text="Create Client Plan", command=self.create_plan, style="Action.TButton", width=18).pack(side="left", padx=(0, 8))
+        ttk.Button(action_center, text="Save Client", command=self.save_current_client, style="Action.TButton", width=18).pack(side="left", padx=(0, 8))
+        ttk.Button(action_center, text="Delete Selected Client", command=self.delete_selected_client, style="Action.TButton", width=18).pack(side="left")
 
         progress_box = ttk.LabelFrame(main, text="Progress Overview", style="Section.TLabelframe")
-        progress_box.grid(row=3, column=0, columnspan=2, sticky="ew", pady=(0, 12))
+        progress_box.grid(row=3, column=0, columnspan=4, sticky="ew", pady=(0, 8))
         progress_box.columnconfigure(1, weight=1)
 
-        ttk.Label(progress_box, text="Progress").grid(row=0, column=0, sticky="w", padx=(10, 12), pady=(12, 6))
+        ttk.Label(progress_box, text="Progress").grid(row=0, column=0, sticky="w", padx=(10, 12), pady=(8, 4))
         self.progress_var = tk.StringVar(value="0%")
-        ttk.Label(progress_box, textvariable=self.progress_var, font=("Segoe UI", 11, "bold")).grid(row=0, column=1, sticky="w", padx=(0, 10), pady=(12, 6))
+        ttk.Label(progress_box, textvariable=self.progress_var, font=("Segoe UI", 10, "bold")).grid(row=0, column=1, sticky="w", padx=(0, 10), pady=(8, 4))
 
         self.progress_bar = ttk.Progressbar(progress_box, orient="horizontal", length=500, mode="determinate")
-        self.progress_bar.grid(row=1, column=0, columnspan=2, sticky="ew", padx=(10, 10), pady=(0, 12))
+        self.progress_bar.grid(row=1, column=0, columnspan=2, sticky="ew", padx=(10, 10), pady=(0, 10))
         self._apply_progress_bar_color(0)
 
-        ttk.Label(progress_box, text="Total Tasks").grid(row=2, column=0, sticky="w", padx=(10, 12), pady=(0, 12))
+        ttk.Label(progress_box, text="Total Tasks").grid(row=2, column=0, sticky="w", padx=(10, 12), pady=(0, 8))
         self.total_entry = ttk.Entry(progress_box, textvariable=self.total_tasks_var, state="readonly")
-        self.total_entry.grid(row=2, column=1, sticky="ew", padx=(0, 10), pady=(0, 12))
+        self.total_entry.grid(row=2, column=1, sticky="ew", padx=(0, 10), pady=(0, 8))
 
         tasks_frame = ttk.LabelFrame(main, text="Tasks", style="Section.TLabelframe")
-        tasks_frame.grid(row=4, column=0, columnspan=2, sticky="nsew", pady=(0, 12))
-        tasks_frame.columnconfigure(0, weight=1)
-        tasks_frame.columnconfigure(1, weight=1)
+        tasks_frame.grid(row=4, column=0, columnspan=4, sticky="nsew", pady=(0, 8))
+        tasks_frame.columnconfigure(0, weight=2)
+        tasks_frame.columnconfigure(1, weight=0)
+        tasks_frame.columnconfigure(2, weight=2)
+        tasks_frame.columnconfigure(3, weight=0)
+        tasks_frame.columnconfigure(4, weight=1, minsize=180)
         tasks_frame.rowconfigure(1, weight=1)
 
-        ttk.Label(tasks_frame, text="All Tasks", font=("Segoe UI", 11, "bold")).grid(row=0, column=0, sticky="w", padx=(10, 0), pady=(10, 4))
-        ttk.Label(tasks_frame, text="Pending Tasks", font=("Segoe UI", 11, "bold")).grid(row=0, column=1, sticky="w", padx=(10, 0), pady=(10, 4))
+        ttk.Label(tasks_frame, text="All Tasks", font=("Segoe UI", 10, "bold")).grid(row=0, column=0, sticky="w", padx=(10, 0), pady=(8, 4))
+        ttk.Label(tasks_frame, text="Pending Tasks", font=("Segoe UI", 10, "bold")).grid(row=0, column=2, sticky="w", padx=(10, 0), pady=(8, 4))
 
-        all_scroll = ttk.Scrollbar(tasks_frame, orient="vertical")
-        pending_scroll = ttk.Scrollbar(tasks_frame, orient="vertical")
+        list_area = ttk.Frame(tasks_frame)
+        list_area.grid(row=1, column=0, columnspan=4, sticky="nsew", padx=(10, 0), pady=(0, 8))
+        list_area.columnconfigure(0, weight=2)
+        list_area.columnconfigure(1, weight=0)
+        list_area.columnconfigure(2, weight=2)
+        list_area.columnconfigure(3, weight=0)
+
+        all_scroll = ttk.Scrollbar(list_area, orient="vertical")
+        pending_scroll = ttk.Scrollbar(list_area, orient="vertical")
 
         self.all_tasks_box = tk.Listbox(
-            tasks_frame,
-            height=12,
-            width=30,
+            list_area,
+            height=8,
+            width=28,
             exportselection=False,
             bg="#ffffff",
             selectmode="browse",
-            font=("Segoe UI", 11),
+            font=("Segoe UI", 10),
             yscrollcommand=all_scroll.set,
             relief="solid",
             borderwidth=1,
         )
         self.pending_tasks_box = tk.Listbox(
-            tasks_frame,
-            height=12,
-            width=30,
+            list_area,
+            height=8,
+            width=28,
             exportselection=False,
             bg="#fffef5",
             selectmode="browse",
-            font=("Segoe UI", 11),
+            font=("Segoe UI", 10),
             yscrollcommand=pending_scroll.set,
             relief="solid",
             borderwidth=1,
@@ -452,32 +562,44 @@ class ProgressApp(tk.Tk):
         all_scroll.config(command=self.all_tasks_box.yview)
         pending_scroll.config(command=self.pending_tasks_box.yview)
 
-        self.all_tasks_box.grid(row=1, column=0, sticky="nsew", padx=(10, 4), pady=(0, 10))
-        all_scroll.grid(row=1, column=1, sticky="ns", padx=(0, 8), pady=(0, 10))
-        self.pending_tasks_box.grid(row=1, column=2, sticky="nsew", padx=(0, 4), pady=(0, 10))
-        pending_scroll.grid(row=1, column=3, sticky="ns", padx=(0, 10), pady=(0, 10))
+        self.all_tasks_box.grid(row=0, column=0, sticky="nsew", padx=(0, 4), pady=(0, 0))
+        all_scroll.grid(row=0, column=1, sticky="ns", padx=(0, 6), pady=(0, 0))
+        self.pending_tasks_box.grid(row=0, column=2, sticky="nsew", padx=(0, 4), pady=(0, 0))
+        pending_scroll.grid(row=0, column=3, sticky="ns", padx=(0, 0), pady=(0, 0))
+
+        button_row = ttk.Frame(tasks_frame)
+        button_row.grid(row=1, column=4, sticky="nse", padx=(8, 10), pady=(0, 8))
+        button_row.columnconfigure(0, weight=1)
+        button_row.columnconfigure(1, weight=1)
+
+        action_buttons = [
+            ("Add Task", self.add_task),
+            ("Tasks Details", self.open_task_details_window),
+            ("Refresh Progress", self.refresh_display),
+            ("Open All Clients", self.open_all_clients),
+            ("Send Email", self.send_email_to_client),
+            ("Save & Exit", self.save_and_exit),
+            ("Cancel", self.cancel_and_exit),
+        ]
+
+        for idx, (text, command) in enumerate(action_buttons):
+            column = idx % 2
+            row = idx // 2
+            ttk.Button(
+                button_row,
+                text=text,
+                command=command,
+                style="Action.TButton",
+                width=15,
+            ).grid(row=row, column=column, sticky="ew", padx=(0, 4), pady=(0, 4))
 
         task_entry_row = ttk.Frame(tasks_frame)
-        task_entry_row.grid(row=2, column=0, columnspan=4, sticky="ew", padx=(10, 10), pady=(0, 10))
+        task_entry_row.grid(row=2, column=0, columnspan=5, sticky="ew", padx=(10, 10), pady=(0, 8))
         ttk.Label(task_entry_row, text="New task").pack(side="left", padx=(0, 8))
         self.new_task_entry = ttk.Entry(task_entry_row, textvariable=self.new_task_var)
         self.new_task_entry.pack(side="left", fill="x", expand=True)
 
-        button_row = ttk.Frame(tasks_frame)
-        button_row.grid(row=3, column=0, columnspan=4, sticky="ew", padx=(10, 10), pady=(0, 12))
-
-        ttk.Button(button_row, text="Add Task", command=self.add_task, style="Action.TButton").pack(side="left", padx=(0, 8))
-        ttk.Button(button_row, text="Tasks Details", command=self.open_task_details_window, style="Action.TButton").pack(side="left", padx=(0, 8))
-        ttk.Button(button_row, text="Refresh Progress", command=self.refresh_display, style="Action.TButton").pack(side="left", padx=(0, 8))
-        ttk.Button(button_row, text="Open All Clients", command=self.open_all_clients, style="Action.TButton").pack(side="left", padx=(0, 8))
-        ttk.Button(button_row, text="Send Email", command=self.send_email_to_client, style="Action.TButton").pack(side="left", padx=(0, 8))
-        ttk.Button(button_row, text="Save & Exit", command=self.save_and_exit, style="Action.TButton").pack(side="left", padx=(0, 8))
-        ttk.Button(button_row, text="Cancel", command=self.cancel_and_exit, style="Action.TButton").pack(side="left")
-
-        main.columnconfigure(0, weight=1)
-        main.columnconfigure(1, weight=1)
-        main.rowconfigure(4, weight=3)
-        progress_box.columnconfigure(1, weight=1)
+        main.rowconfigure(4, weight=2)
         tasks_frame.rowconfigure(1, weight=1)
 
         self.clear_client_form()
@@ -497,6 +619,7 @@ class ProgressApp(tk.Tk):
         self.client_name_var.set("")
         self.contact_var.set("")
         self.business_var.set("")
+        self.shop_number_var.set("")
         self.email_var.set("")
         self.total_tasks_var.set("0")
         self.new_task_var.set("")
@@ -533,9 +656,14 @@ class ProgressApp(tk.Tk):
         self.load_client_progress(matching_client.name, matching_client.business)
         self.contact_var.set(matching_client.contact)
         self.business_var.set(matching_client.business)
+        self.shop_number_var.set(matching_client.shop_number)
         self.email_var.set(matching_client.email)
 
     def _parse_task_list(self):
+        task_text = self.new_task_var.get().strip()
+        if task_text:
+            return parse_task_items(task_text, fallback_total=0)
+
         try:
             total = int(self.total_tasks_var.get())
         except ValueError:
@@ -586,22 +714,27 @@ class ProgressApp(tk.Tk):
         email = self.email_var.get().strip()
         tasks = self._parse_task_list()
 
+        if not tasks:
+            messagebox.showwarning("Missing tasks", "Enter at least one task or set a total task count greater than zero.")
+            return
+
         self.client_manager.load_clients()
         existing = next((client for client in self.client_manager.clients if client.name.lower() == name.lower()), None)
         if existing is None:
             client = Client(name, contact, business, email)
             self.client_manager.clients.append(client)
-            self.client_manager.save_clients()
         else:
             existing.contact = contact
             existing.business = business
             existing.email = email or existing.email
-            self.client_manager.save_clients()
             client = existing
+
+        self.client_manager.save_clients()
 
         self.plan = Plan(client, all_tasks=list(tasks))
         self.plan.sync_task_lists(all_tasks=list(tasks), pending_tasks=list(tasks))
         self.total_tasks_var.set(str(len(self.plan.all_tasks)))
+        self.new_task_var.set("")
         self.refresh_display()
 
     def open_task_details_window(self):
@@ -690,9 +823,10 @@ class ProgressApp(tk.Tk):
             business = matching_client.business
             self.contact_var.set(matching_client.contact)
             self.business_var.set(matching_client.business)
+            self.shop_number_var.set(matching_client.shop_number)
             self.email_var.set(matching_client.email)
         else:
-            client = Client(client_name, "N/A", business)
+            client = Client(client_name, "N/A", business, shop_number="")
 
         saved = Plan.Clients_progress.get(client_name, {})
         all_tasks = list(saved.get("all_tasks", []))
@@ -713,18 +847,12 @@ class ProgressApp(tk.Tk):
         self.refresh_display()
 
     def save_current_client(self):
-        if self.plan is None:
-            return
-
         self.client_manager.load_clients()
         name = self.client_name_var.get().strip()
-        if not name:
+        if not name or name == "<New Client>":
+            messagebox.showwarning("Missing client", "Please enter a client name before saving.")
             return
 
-        existing = next(
-            (client for client in self.client_manager.clients if client.name.lower() == name.lower()),
-            None,
-        )
         contact = self.contact_var.get().strip()
         business = self.business_var.get().strip()
         if not contact:
@@ -734,24 +862,40 @@ class ProgressApp(tk.Tk):
             messagebox.showwarning("Missing business", "Please enter the client business type before saving.")
             return
 
+        existing = next(
+            (client for client in self.client_manager.clients if client.name.lower() == name.lower()),
+            None,
+        )
+
+        shop_number = self.shop_number_var.get().strip()
+
         if existing is None:
             client = Client(
                 name,
                 contact,
                 business,
                 self.email_var.get().strip(),
+                shop_number=shop_number,
             )
             self.client_manager.clients.append(client)
         else:
             existing.contact = contact
             existing.business = business
+            existing.shop_number = shop_number
             existing.email = self.email_var.get().strip() or existing.email
             client = existing
 
         self.client_manager.save_clients()
+        self.refresh_client_combo()
+        self.client_name_var.set(name)
+
+        if self.plan is None:
+            self.plan = Plan(client, all_tasks=[])
         self.plan.client = client
         self.plan.client_name = client.name
         self.plan.update_clients_progress()
+        self.refresh_display()
+        messagebox.showinfo("Client saved", f"'{name}' was saved successfully.")
 
     def send_email_to_client(self):
         email = self.email_var.get().strip()
@@ -772,6 +916,28 @@ class ProgressApp(tk.Tk):
 
     def cancel_and_exit(self):
         self.destroy()
+
+    def add_client_review(self):
+        name = self.client_name_var.get().strip()
+        if not name or name == "<New Client>":
+            messagebox.showwarning("No client selected", "Select or create a client before adding a review.")
+            return
+
+        review = self.review_text.get("1.0", "end").strip()
+        if not review:
+            messagebox.showwarning("No review", "Please type a review before saving it.")
+            return
+
+        if not self.client_manager.add_review(name, review):
+            messagebox.showwarning("Client not found", f"'{name}' was not found in the saved client list.")
+            return
+
+        self.review_text.delete("1.0", tk.END)
+        messagebox.showinfo("Review saved", f"Review saved for '{name}'.")
+
+    def open_reviews_log(self):
+        self.client_manager.load_clients()
+        ClientReviewsLogWindow(self, self.client_manager)
 
     def open_all_clients(self):
         AllClientsProgressWindow(self)

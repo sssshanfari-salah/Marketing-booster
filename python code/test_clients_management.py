@@ -3,7 +3,7 @@ import tempfile
 import unittest
 
 from clients_management import Client, ClientManager
-from clients_progress_ui import Plan
+from clients_progress_ui import Plan, parse_task_items
 
 
 class ClientManagerTests(unittest.TestCase):
@@ -76,6 +76,27 @@ class ClientManagerTests(unittest.TestCase):
 
         self.assertEqual(plan.all_tasks, ["Task 1", "Task 2", "Task 3", "Task 4"])
         self.assertEqual(plan.pending_tasks, ["Task 2", "Task 4"])
+
+    def test_add_review_and_get_all_reviews(self):
+        manager = ClientManager(self.file_path)
+        manager.add_client("Ali", "123456", "Stationery")
+
+        added = manager.add_review("Ali", "Good follow-up and quick response.")
+
+        self.assertTrue(added)
+        self.assertEqual(len(manager.clients[0].reviews), 1)
+        self.assertIn("Good follow-up and quick response.", manager.clients[0].reviews[0]["review"])
+
+        all_reviews = manager.get_all_reviews()
+        self.assertEqual(len(all_reviews), 1)
+        self.assertEqual(all_reviews[0]["client_name"], "Ali")
+
+    def test_parse_task_items_reads_comma_and_newline_lists(self):
+        tasks = parse_task_items("Research, Design, Launch\nReview")
+        self.assertEqual(tasks, ["Research", "Design", "Launch", "Review"])
+
+        tasks = parse_task_items("", fallback_total=3)
+        self.assertEqual(tasks, ["Task 1", "Task 2", "Task 3"])
 
 
 if __name__ == "__main__":

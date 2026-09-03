@@ -1,14 +1,27 @@
 import json
+from datetime import datetime
 from pathlib import Path
 from typing import List
 
 
 class Client:
-    def __init__(self, name: str, contact: str, business: str, email: str = ""):
+    def __init__(self, name: str, contact: str, business: str, email: str = "", shop_number: str = "", reviews=None):
         self.name = name
         self.contact = contact
         self.business = business
         self.email = email
+        self.shop_number = shop_number
+        self.reviews = []
+
+        if reviews is not None:
+            for review in reviews:
+                if isinstance(review, dict):
+                    self.reviews.append({
+                        "date": review.get("date", ""),
+                        "review": review.get("review", ""),
+                    })
+                elif isinstance(review, str):
+                    self.reviews.append({"date": "", "review": review})
 
     def to_dict(self):
         return {
@@ -16,19 +29,26 @@ class Client:
             "contact": self.contact,
             "business": self.business,
             "email": self.email,
+            "shop_number": self.shop_number,
+            "reviews": list(self.reviews),
         }
 
     @classmethod
     def from_dict(cls, data):
+        reviews = data.get("reviews", [])
+        if not isinstance(reviews, list):
+            reviews = []
         return cls(
             data.get("name", ""),
             data.get("contact", ""),
             data.get("business", ""),
             data.get("email", ""),
+            shop_number=str(data.get("shop_number", "")),
+            reviews=reviews,
         )
 
     def __repr__(self):
-        return f"Client name: {self.name}\nContact: {self.contact}\nType of business: {self.business}\nEmail: {self.email}"
+        return f"Client name: {self.name}\nContact: {self.contact}\nType of business: {self.business}\nEmail: {self.email}\nReviews: {len(self.reviews)}"
 
 
 class ClientManager:
@@ -60,6 +80,42 @@ class ClientManager:
 
         self.save_clients()
         return True
+
+    def add_review(self, name: str, review_text: str):
+        if not name or not isinstance(name, str):
+            return False
+
+        target_name = name.strip()
+        review = str(review_text or "").strip()
+        if not target_name or not review:
+            return False
+
+        client = next((item for item in self.clients if item.name.lower() == target_name.lower()), None)
+        if client is None:
+            return False
+
+        client.reviews.append({
+            "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "review": review,
+        })
+        self.save_clients()
+        return True
+
+    def get_all_reviews(self):
+        reviews = []
+        for client in self.clients:
+            for review in client.reviews:
+                reviews.append({
+                    "client_name": client.name,
+                    "contact": client.contact,
+                    "business": client.business,
+                    "email": client.email,
+                    "date": review.get("date", ""),
+                    "review": review.get("review", ""),
+                })
+
+        reviews.sort(key=lambda item: (item.get("date", "") or "", item.get("client_name", "").lower()))
+        return reviews
 
     def list_clients(self):
         if not self.clients:

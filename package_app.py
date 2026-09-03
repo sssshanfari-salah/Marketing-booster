@@ -9,8 +9,21 @@ DIST_DIR = APP_DIR / "dist"
 BUILD_DIR = APP_DIR / "build"
 SPEC_FILE = APP_DIR / "marketing_booster.spec"
 DESKTOP_DIR = Path.home() / "Desktop"
-TARGET_EXE = DIST_DIR / "marketing_booster" / "marketing_booster.exe"
 TARGET_ICON = APP_DIR / "starco_icon.ico"
+
+
+def find_built_exe():
+    candidates = [
+        DIST_DIR / "marketing_booster.exe",
+        DIST_DIR / "marketing_booster" / "marketing_booster.exe",
+    ]
+    for candidate in candidates:
+        if candidate.exists():
+            return candidate
+    return None
+
+
+TARGET_EXE = find_built_exe()
 
 
 def ensure_pyinstaller():
@@ -32,7 +45,7 @@ def ensure_pywin32():
 def build_app():
     if not ensure_pyinstaller():
         print("PyInstaller is not installed. Installing it now...")
-        subprocess.check_call([sys.executable, "-m", "pip", "install", "pyinstaller"]) 
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "pyinstaller"])
 
     cmd = [
         sys.executable,
@@ -52,7 +65,6 @@ def build_app():
     ]
 
     if TARGET_ICON.exists():
-        cmd[0:0] = []
         cmd = [
             sys.executable,
             "-m",
@@ -75,11 +87,12 @@ def build_app():
     print("Building app...")
     subprocess.check_call(cmd, cwd=str(APP_DIR))
 
-    return TARGET_EXE
+    return find_built_exe()
 
 
 def create_shortcut():
-    if not TARGET_EXE.exists():
+    exe_path = find_built_exe()
+    if exe_path is None or not exe_path.exists():
         print("Executable not found. Build the app first.")
         return None
 
@@ -89,11 +102,18 @@ def create_shortcut():
         return None
 
     desktop_link = DESKTOP_DIR / "Marketing Booster.lnk"
-    shell = __import__("win32com.client").Dispatch("WScript.Shell")
+    try:
+        import win32com.client as win32com_client
+    except ImportError:
+        print("pywin32 is required to create the desktop shortcut. Install it with:")
+        print("python -m pip install pywin32")
+        return None
+
+    shell = win32com_client.Dispatch("WScript.Shell")
     shortcut = shell.CreateShortCut(str(desktop_link))
-    shortcut.Targetpath = str(TARGET_EXE)
-    shortcut.WorkingDirectory = str(TARGET_EXE.parent)
-    shortcut.IconLocation = str(TARGET_EXE)
+    shortcut.Targetpath = str(exe_path)
+    shortcut.WorkingDirectory = str(exe_path.parent)
+    shortcut.IconLocation = str(exe_path)
     shortcut.save()
 
     print(f"Shortcut created: {desktop_link}")
